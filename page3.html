@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Collection</title>
+    <style>
+        body {
+            margin: 0;
+            background: #fff5f8;
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        #instruction {
+            position: fixed;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            color: #d63384;
+            font-size: 1.5rem;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        #book-target {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            font-size: 4.5rem;
+            z-index: 100;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bounce { transform: scale(1.3); }
+
+        .memory-photo {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border: 6px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            object-fit: cover;
+            transition: transform 0.6s ease-in, opacity 0.4s, left 0.6s, top 0.6s;
+        }
+
+        .fly-to-book {
+            left: calc(100% - 120px) !important;
+            top: calc(100% - 120px) !important;
+            transform: scale(0) rotate(720deg) !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #final-collage {
+            display: none; 
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 0 100px 0; 
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            justify-items: center;
+        }
+
+        .collage-img {
+            width: 100%;
+            max-width: 200px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border: 5px solid #ffc0cb;
+            border-radius: 10px;
+            cursor: zoom-in;
+            transition: 0.3s;
+        }
+
+        .closing-note {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px 20px 20px;
+            color: #b02a6a;
+            font-size: 2.2rem;
+            line-height: 1.4;
+            font-style: italic;
+            border-top: 2px dashed #ffc0cb;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        .next-arrow-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding-bottom: 100px;
+        }
+
+        .next-arrow {
+            display: inline-flex;
+            font-size: 3rem;
+            color: #d63384;
+            text-decoration: none;
+            background: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .next-arrow:hover {
+            transform: scale(1.1);
+            background: #fff5f5;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        h1.collage-title { grid-column: 1 / -1; text-align: center; color: #d63384; font-size: 3.5rem; margin-bottom: 40px; }
+
+        #lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+        }
+        #lightbox img { max-width: 90%; max-height: 80%; border: 8px solid white; }
+    </style>
+</head>
+<body>
+
+    <div id="instruction">Tap 18 memories to fill our book (<span id="count">0</span>/18)</div>
+    <div id="book-target">📖</div>
+
+    <div id="photo-container"></div>
+
+    <div id="final-collage">
+        <h1 class="collage-title">Our Memory Book ❤️</h1>
+    </div>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="lightbox-img" src="">
+    </div>
+
+    <script>
+        const totalPhotos = 18;
+        let clickedCount = 0;
+        const photoPaths = Array.from({length: totalPhotos}, (_, i) => `memory${i+1}.jpg`);
+
+        photoPaths.forEach((path) => {
+            const img = document.createElement('img');
+            img.src = path;
+            img.className = 'memory-photo';
+            img.style.left = Math.random() * 80 + 5 + 'vw';
+            img.style.top = Math.random() * 70 + 10 + 'vh';
+            img.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
+
+            img.onclick = function() {
+                if (this.classList.contains('fly-to-book')) return;
+                this.classList.add('fly-to-book');
+                clickedCount++;
+                document.getElementById('count').innerText = clickedCount;
+
+                const book = document.getElementById('book-target');
+                book.classList.add('bounce');
+                setTimeout(() => book.classList.remove('bounce'), 200);
+
+                const clone = document.createElement('img');
+                clone.src = this.src;
+                clone.className = 'collage-img';
+                clone.onclick = function(e) {
+                    e.stopPropagation();
+                    document.getElementById('lightbox-img').src = this.src;
+                    document.getElementById('lightbox').style.display = 'flex';
+                };
+                document.getElementById('final-collage').appendChild(clone);
+
+                if (clickedCount === totalPhotos) {
+                    setTimeout(showCollage, 1000);
+                }
+            };
+            document.getElementById('photo-container').appendChild(img);
+        });
+
+        function showCollage() {
+            const collage = document.getElementById('final-collage');
+            
+            const note = document.createElement('div');
+            note.className = 'closing-note';
+            note.innerText = "This book isn’t finished yet, and I can’t wait to fill the next pages with you";
+            collage.appendChild(note);
+
+            const arrowDiv = document.createElement('div');
+            arrowDiv.className = 'next-arrow-container';
+            arrowDiv.innerHTML = `<a href="page4.html" class="next-arrow">➔</a>`;
+            collage.appendChild(arrowDiv);
+
+            document.getElementById('instruction').style.display = 'none';
+            document.getElementById('book-target').style.display = 'none';
+            
+            collage.style.display = 'grid';
+            document.body.style.overflowY = 'auto';
+        }
+    </script>
+</body>
+</html>
