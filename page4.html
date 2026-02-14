@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Letter for You</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Georgia', serif;
+            background-color: #ffc0cb;
+            background-image: url('https://www.transparenttextures.com/patterns/roses.png');
+            overflow: hidden;
+        }
+
+        #letter-trigger {
+            font-size: 5rem;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.3s ease;
+            background: none;
+            border: none;
+            z-index: 10;
+        }
+
+        #letter-trigger:hover {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        #letter-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 192, 203, 0.85); 
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .paper {
+            background: #fffdf5;
+            width: 85%;
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 40px;
+            border-radius: 2px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            overflow-y: auto;
+            position: relative;
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.15rem;
+            border-left: 15px solid #f0e68c;
+        }
+
+        .paper h3 {
+            color: #e63946;
+            margin-top: 0;
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+            font-style: italic;
+            font-weight: bold;
+            color: #b02a6a;
+        }
+
+        .sunflower {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.5;
+            animation: drift 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(110vh) rotate(0deg); }
+            100% { transform: translateY(-20vh) rotate(360deg); }
+        }
+
+        #close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="letter-trigger" onclick="openLetter()">✉️</button>
+
+    <div id="letter-overlay">
+        <div class="paper">
+            <span id="close-btn" onclick="closeLetter()">×</span>
+            <h3>My babu,</h3>
+            
+            <p>Three years with you, and yet distance still finds a way to make my heart ache for your presence. No matter how many calls, messages, or late-night conversations we share, nothing replaces the feeling of being beside you. I long for the day I can finally close that distance — to see you in a yellow sundress glowing under the sun, while I’m there in my blue jeans and plaid shirt, running toward you across a field of sunflowers like it’s the only place we’re meant to be.</p>
+            
+            <p>These years haven’t been easy. I’ve faced hardships, moments of doubt, and days that felt heavier than I could carry. But through all of it, I was never truly alone. You were there — steady, patient, loving. You became my sanctuary, my safe space in a world that sometimes feels overwhelming. With you, I can breathe. With you, I can be myself without fear.</p>
+            
+            <p>No matter the distance, no matter the time, I will always cherish every moment we have — every memory, every laugh, every quiet second we share. And until the day I can finally hold you close, I’ll keep holding onto us.</p>
+
+            <div class="signature">
+                Always yours. Istian, your babu💛
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openLetter() {
+            const overlay = document.getElementById('letter-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+            }, 10);
+            document.getElementById('letter-trigger').style.opacity = '0';
+        }
+
+        function closeLetter() {
+            const overlay = document.getElementById('letter-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.getElementById('letter-trigger').style.opacity = '1';
+            }, 800);
+        }
+
+        for (let i = 0; i < 12; i++) {
+            let flower = document.createElement('div');
+            flower.className = 'sunflower';
+            flower.innerText = '🌻';
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDelay = Math.random() * 8 + 's';
+            document.body.appendChild(flower);
+        }
+    </script>
+</body>
+</html>
