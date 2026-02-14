@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day!</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            background-color: #ffc0cb;
+            background-image: url('https://www.transparenttextures.com/patterns/roses.png');
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            color: #e63946;
+            font-size: clamp(3rem, 10vw, 5rem);
+            text-shadow: 4px 4px 0px #fff, 8px 8px 15px rgba(230, 57, 70, 0.4);
+            z-index: 10;
+            position: relative;
+        }
+
+        .floating {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+            animation: floatUp 6s linear infinite;
+            opacity: 0.8;
+        }
+
+        .dog-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        .arrow-container {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        .arrow {
+            font-size: 3rem;
+            color: #e63946;
+            text-decoration: none;
+            background: white;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .arrow:hover { transform: scale(1.2); background: #fff5f5; }
+    </style>
+</head>
+<body>
+
+    <h1>Happy Valentines Day Babu</h1>
+
+    <div class="arrow-container" onclick="location.href='page2.html'">
+        <a href="#" class="arrow">➔</a>
+    </div>
+
+    <script>
+        const dogImages = [
+            'dog1.png', 
+            'dog2.png', 
+            'dog3.png'
+        ];
+
+        function createFloatingElement(isDog) {
+            const el = document.createElement('div');
+            el.className = 'floating';
+            
+            if (isDog) {
+                const img = document.createElement('img');
+                img.src = dogImages[Math.floor(Math.random() * dogImages.length)];
+                img.className = 'dog-photo';
+                el.appendChild(img);
+            } else {
+                el.innerText = '🌹';
+                el.style.fontSize = Math.random() * 20 + 20 + 'px';
+            }
+
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDelay = Math.random() * 5 + 's';
+            el.style.animationDuration = Math.random() * 4 + 6 + 's';
+
+            document.body.appendChild(el);
+        }
+
+        for (let i = 0; i < 10; i++) createFloatingElement(false);
+        for (let i = 0; i < 8; i++) createFloatingElement(true);
+    </script>
+</body>
+</html>
